@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // instancia de Axios con la configuración base
 const apiClient = axios.create({
-  baseURL: 'https://URL_DEL_BACKEND_IRA_AQUI/api',
+  baseURL: 'https://gestion-combustible-api.onrender.com',
   headers: {
     'Content-Type': 'application/json',
   },
