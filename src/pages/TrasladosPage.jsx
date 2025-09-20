@@ -1,0 +1,173 @@
+import { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import api from '../services/api';
+
+function TrasladosPage() {
+  // Estados para los datos del formulario y las listas
+  const [maquinas, setMaquinas] = useState([]);
+  const [sucursales, setSucursales] = useState([]);
+  const [formData, setFormData] = useState({
+    id_maquina: '',
+    horometro_salida: '',
+    id_sucursal_destino: ''
+  });
+
+  const [trasladosPendientes, setTrasladosPendientes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [mensaje, setMensaje] = useState({ tipo: '', texto: '' });
+  const { usuario } = useAuth();
+
+  // Efecto para cargar las máquinas y sucursales
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const [resMaquinas, resSucursales, resPendientes] = await Promise.all([
+          api.get('/maquinaria/mi-sucursal'),
+          api.get('/sucursales'),
+          api.get('/traslados/pendientes')
+        ]);
+
+        setMaquinas(resMaquinas.data);
+
+        // Filtramos para no poder seleccionar la propia sucursal como destino
+        const sucursalesDestino = resSucursales.data.filter(s => s.id_sucursal !== usuario.sucursal);
+        setSucursales(sucursalesDestino);
+        setTrasladosPendientes(resPendientes.data)
+
+      } catch (error) {
+        setMensaje({ tipo: 'error', texto: 'Error al cargar datos para el formulario.' });
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (usuario) {
+      fetchData();
+    }
+  }, [usuario]);
+
+  //const handleChange = (e) => {
+  //  setFormData({ ...formData, [e.target.name]: e.target.value });
+  //};
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMensaje({ tipo: '', texto: '' });
+    try {
+      const res = await api.post('/traslados', formData);
+      setMensaje({ tipo: 'exito', texto: res.data.mensaje });
+      // Limpiar formulario y recargar lista de máquinas (la máquina trasladada ya no estará disponible)
+      setFormData({ id_maquina: '', horometro_salida: '', id_sucursal_destino: '' });
+      const resMaquinas = await api.get('/maquinaria/mi-sucursal');
+      setMaquinas(resMaquinas.data);
+
+    } catch (error) {
+      setMensaje({ tipo: 'error', texto: error.response?.data?.mensaje || 'Error al solicitar el traslado.' });
+      console.error(error);
+    }
+  };
+
+  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+
+  // --- NUEVA FUNCIÓN para responder a un traslado ---
+  const handleResponderTraslado = async (idTraslado, decision) => {
+    const motivo = decision === 'Rechazado' 
+      ? window.prompt('Por favor, ingresa el motivo del rechazo:') 
+      : null;
+
+    if (decision === 'Rechazado' && !motivo) {
+      // Si el usuario cancela el prompt de rechazo, no hacemos nada
+      return;
+    }
+
+    try {
+      await api.patch(`/traslados/${idTraslado}/respuesta`, {
+        decision: decision,
+        motivo_rechazo: motivo
+      });
+      // Actualizamos la lista para remover el traslado gestionado
+      setTrasladosPendientes(trasladosPendientes.filter(t => t.id_traslado !== idTraslado));
+      setMensaje({ tipo: 'exito', texto: `Traslado ${decision.toLowerCase()} exitosamente.` });
+    } catch (error) {
+      setMensaje({ tipo: 'error', texto: error.response?.data?.mensaje || 'Error al responder al traslado.' });
+    }
+  };
+
+  return (
+    <>
+    <div>
+      <h2>Solicitar Traslado de Maquinaria</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Máquina a trasladar:</label>
+          <select name="id_maquina" value={formData.id_maquina} onChange={handleChange} required>
+            <option value="">Seleccione una máquina</option>
+            {maquinas.map(m => (
+              <option key={m.id_maquina} value={m.id_maquina}>
+                {m.codigo_interno} - {m.marca} {m.modelo}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label>Horómetro de Salida:</label>
+          <input type="number" name="horometro_salida" value={formData.horometro_salida} onChange={handleChange} required step="0.01" />
+        </div>
+        <div>
+          <label>Sucursal de Destino:</label>
+          <select name="id_sucursal_destino" value={formData.id_sucursal_destino} onChange={handleChange} required>
+            <option value="">Seleccione una sucursal</option>
+            {sucursales.map(s => (
+              <option key={s.id_sucursal} value={s.id_sucursal}>{s.nombre_sucursal}</option>
+            ))}
+          </select>
+        </div>
+        <button type="submit">Solicitar Traslado</button>
+      </form>
+      {mensaje.texto && <p style={{ color: mensaje.tipo === 'error' ? 'red' : 'green' }}>{mensaje.texto}</p>}
+    </div>
+
+    <hr style={{ margin: '2rem 0' }} />
+
+    <section>
+        <h2>Traslados Pendientes de Recepción</h2>
+        {loading && <p>Cargando traslados...</p>}
+        {!loading && trasladosPendientes.length === 0 && <p>No tienes traslados pendientes de recibir.</p>}
+        {!loading && trasladosPendientes.length > 0 && (
+          <table>
+            <thead>
+              <tr>
+                <th>Fecha Solicitud</th>
+                <th>Máquina</th>
+                <th>Sucursal Origen</th>
+                <th>Horómetro Salida</th>
+                <th>Solicitante</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trasladosPendientes.map(t => (
+                <tr key={t.id_traslado}>
+                  <td>{new Date(t.fecha_solicitud).toLocaleString('es-CL')}</td>
+                  <td>{t.maquina_codigo} - {t.maquina_modelo}</td>
+                  <td>{t.sucursal_origen}</td>
+                  <td>{t.horometro_salida}</td>
+                  <td>{t.usuario_solicita}</td>
+                  <td>
+                    <button onClick={() => handleResponderTraslado(t.id_traslado, 'Aceptado')}>Aceptar</button>
+                    <button onClick={() => handleResponderTraslado(t.id_traslado, 'Rechazado')} style={{ marginLeft: '0.5rem' }}>Rechazar</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </section>
+
+      </>
+  );
+}
+
+export default TrasladosPage;
