@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+
+import api from '../services/api'; 
 import { useAuth } from '../contexts/AuthContext';
 
 function LoginPage() {
@@ -15,7 +16,7 @@ function LoginPage() {
   useEffect(() => {
     const cargarSucursales = async () => {
       try {
-        const respuesta = await axios.get('http://localhost:3001/api/sucursales');
+        const respuesta = await api.get('/sucursales');
         setSucursales(respuesta.data);
       } catch (error) {
         console.error("Error al cargar sucursales", error);
@@ -25,15 +26,7 @@ function LoginPage() {
     cargarSucursales();
   }, []); // El array vacío [] significa que esto se ejecuta solo una vez
 
-  useState(() => {
-    const cargarSucursales = async () => {
-      try {
-        const respuesta = await axios.get('http://localhost:3001/api/sucursales');
-        setSucursales(respuesta.data);
-      } catch (error) { console.error("Error al cargar sucursales", error); }
-    };
-    cargarSucursales();
-  }, []);
+  
 
 
   // Función que se ejecuta al enviar el formulario
@@ -43,7 +36,7 @@ function LoginPage() {
 
     try {
       // 2. Petición POST a nuestro backend con Axios
-      const respuesta = await axios.post('http://localhost:3001/api/login', {
+      const respuesta = await api.post('/login', {
         rut: rut,
         id_sucursal: sucursalId,
         password: password,
