@@ -86,7 +86,7 @@ function UsuariosPage() {
             <table className="responsive-table">
               <thead>
                 <tr>
-                  <th>RUT</th>
+                  <th>Rut</th>
                   <th>Nombre</th>
                   <th>Rol</th>
                   <th>Sucursal</th>
