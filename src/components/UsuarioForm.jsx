@@ -63,43 +63,52 @@ function UsuarioForm({ usuarioInicial, onSave, onCancel }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="form-container">
       <h3>{usuarioInicial ? 'Editar Usuario' : 'Crear Nuevo Usuario'}</h3>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
-      <div><label>RUT:</label><input type="text" name="rut" value={formData.rut} onChange={handleChange} required /></div>
-      <div><label>Nombre:</label><input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required /></div>
-      <div><label>Apellido:</label><input type="text" name="apellido" value={formData.apellido} onChange={handleChange} /></div>
+      <div className="form-group">
+        <label>RUT:</label>
+        <input type="text" name="rut" value={formData.rut} onChange={handleChange} required className="form-input" />
+      </div>
+      <div className="form-group">
+        <label>Nombre:</label>
+        <input type="text" name="nombre" value={formData.nombre} onChange={handleChange} required className="form-input" />
+      </div>
+      <div className="form-group">
+        <label>Apellido:</label>
+        <input type="text" name="apellido" value={formData.apellido} onChange={handleChange} className="form-input" />
+      </div>
       
-      <div>
+      <div className="form-group">
         <label>Contraseña:</label>
-        <input type="password" name="password" value={formData.password} onChange={handleChange} required={!usuarioInicial} />
+        <input type="password" name="password" value={formData.password} onChange={handleChange} required={!usuarioInicial} className="form-input" />
       </div>
-
-      {/* 2. AÑADIMOS EL NUEVO INPUT PARA CONFIRMAR */}
-      <div>
+      <div className="form-group">
         <label>Confirmar Contraseña:</label>
-        <input type="password" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required={!usuarioInicial} />
+        <input type="password" name="confirmPassword" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required={!usuarioInicial} className="form-input" />
       </div>
 
-      <div>
+      <div className="form-group">
         <label>Rol:</label>
-        <select name="id_rol" value={formData.id_rol} onChange={handleChange} required>
+        <select name="id_rol" value={formData.id_rol} onChange={handleChange} required className="form-select">
           <option value="">Seleccione un rol</option>
           {roles.map(rol => <option key={rol.id_rol} value={rol.id_rol}>{rol.nombre_rol}</option>)}
         </select>
       </div>
 
-      <div>
+      <div className="form-group">
         <label>Sucursal:</label>
-        <select name="id_sucursal" value={formData.id_sucursal} onChange={handleChange} required>
+        <select name="id_sucursal" value={formData.id_sucursal} onChange={handleChange} required className="form-select">
           <option value="">Seleccione una sucursal</option>
           {sucursales.map(suc => <option key={suc.id_sucursal} value={suc.id_sucursal}>{suc.nombre_sucursal}</option>)}
         </select>
       </div>
 
-      <button type="submit">Guardar</button>
-      <button type="button" onClick={onCancel}>Cancelar</button>
+      <div className="form-actions">
+        <button type="submit" className="btn btn-primary">Guardar</button>
+        <button type="button" onClick={onCancel} className="btn btn-secondary">Cancelar</button>
+      </div>
     </form>
   );
 }

@@ -62,33 +62,35 @@ function LoginPage() {
 
   return (
     <div>
-      <h1>Iniciar Sesión</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>RUT:</label>
-          <input type="text" value={rut} onChange={(e) => setRut(e.target.value)} required />
-        </div>
-        <div>
-          <label>Sucursal:</label>
-          {/* 3. Reemplazamos el input por un select */}
-          <select value={sucursalId} onChange={(e) => setSucursalId(e.target.value)} required>
-            <option value="" disabled>Seleccione una sucursal</option>
-            {sucursales.map((suc) => (
-              <option key={suc.id_sucursal} value={suc.id_sucursal}>
-                {suc.nombre_sucursal}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>Contraseña:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        {/* Mostramos el mensaje de error si existe */}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
-        <button type="submit">Ingresar</button>
-      </form>
-    </div>
+    <h2>Iniciar Sesión</h2>
+    <form onSubmit={handleSubmit} className="form-container">
+      <div className="form-group">
+        <label>RUT:</label>
+        <input type="text" value={rut} onChange={(e) => setRut(e.target.value)} required className="form-input" />
+      </div>
+      <div className="form-group">
+        <label>Sucursal:</label>
+        <select value={sucursalId} onChange={(e) => setSucursalId(e.target.value)} required className="form-select">
+          <option value="" disabled>Seleccione una sucursal</option>
+          {sucursales.map((suc) => (
+            <option key={suc.id_sucursal} value={suc.id_sucursal}>
+              {suc.nombre_sucursal}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="form-group">
+        <label>Contraseña:</label>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="form-input" />
+      </div>
+      
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      
+      <div className="form-actions">
+        <button type="submit" className="btn btn-primary">Ingresar</button>
+      </div>
+    </form>
+  </div>
   );
 }
 

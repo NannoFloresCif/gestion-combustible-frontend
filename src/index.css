@@ -1,37 +1,82 @@
+/* =================================
+   1. VARIABLES Y ESTILOS GLOBALES
+   ================================= */
+
+/* :root es donde definimos nuestras variables globales (paleta de colores) */
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Paleta de colores */
+  --cadet-gray: #8BAEB7;
+  --brunswick-green: #0D5854;
+  --caribbean-current: #145D57;
+  --midnight-green: #013442;
+  --cerulean: #006784;
+  --midnight-green-2: #0E4D5C;
+
+  /* Asignación semántica de colores (más fácil de usar) */
+  --color-primario: var(--cerulean);
+  --color-primario-oscuro: var(--midnight-green-2);
+  --color-fondo: var(--midnight-green);
+  --color-superficie: var(--midnight-green-2); /* Para cards, tablas, etc. */
+  --color-texto-principal: #E0F2F1;
+  --color-texto-secundario: var(--cadet-gray);
+  --color-borde: var(--caribbean-current);
+}
+
+/* Reset básico y configuración global */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
 }
 
 body {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--color-fondo);
+  color: var(--color-texto-principal);
+  line-height: 1.6;
 }
 
-table {
+h1, h2, h3 {
+  color: var(--color-texto-principal);
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-primario);
+  text-decoration: none;
+}
+
+/* =================================
+   2. LAYOUT PRINCIPAL DE LA APP
+   ================================= */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-header {
+  background-color: var(--color-superficie);
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.main-content {
+  flex-grow: 1; /* Hace que el contenido principal ocupe todo el espacio disponible */
+  padding: 1.5rem;
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1.5rem;
+  max-width: 1200px; /* Ancho máximo para pantallas grandes */
+  margin: 0 auto;
 }
 
-th, td {
-  border: 1px solid #555;
-  padding: 0.75rem;
-  text-align: left;
-}
-
-th {
-  background-color: #333;
-}
-
-tbody tr:nth-child(odd) {
-  background-color: #2c2c2c;
-}
-
-button {
-  cursor: pointer;
+/* Media Query para pantallas más grandes (tablets y escritorios) */
+@media (min-width: 768px) {
+  .main-content {
+    padding: 2rem;
+  }
 }

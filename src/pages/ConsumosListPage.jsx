@@ -105,10 +105,10 @@ function ConsumosListPage() {
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
-      <table>
+      <table className="responsive-table">
         <thead>
           <tr>
-            <th>Fecha y Hora</th>
+            <th >Fecha y Hora</th>
             <th>Máquina</th>
             <th>Horómetro</th>
             <th>Litros</th>
@@ -120,14 +120,14 @@ function ConsumosListPage() {
         <tbody>
           {consumos.map(consumo => (
             <tr key={consumo.id_consumo}>
-              <td>{new Date(consumo.fecha_hora).toLocaleString('es-CL')}</td>
-              <td>{consumo.maquina_codigo} - {consumo.maquina_modelo}</td>
-              <td>{consumo.horometro}</td>
-              <td>{consumo.litros_cargados}</td>
-              <td>{consumo.usuario_registro}</td>
-              <td>{consumo.nombre_surtidor}</td>
-              <td>
-                <button onClick={() => handleEliminar(consumo.id_consumo)}>
+              <td data-label>{new Date(consumo.fecha_hora).toLocaleString('es-CL')}</td>
+              <td data-label>{consumo.maquina_codigo} - {consumo.maquina_modelo}</td>
+              <td data-label>{consumo.horometro}</td>
+              <td data-label>{consumo.litros_cargados}</td>
+              <td data-label>{consumo.usuario_registro}</td>
+              <td data-label>{consumo.nombre_surtidor}</td>
+              <td data-label>
+                <button className="btn-secondary" onClick={() => handleEliminar(consumo.id_consumo)}>
                   Eliminar
                 </button>
               </td>

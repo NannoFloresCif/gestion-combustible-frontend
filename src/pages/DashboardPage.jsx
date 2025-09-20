@@ -19,21 +19,26 @@ function DashboardPage() {
   }
   return (
     <div>
-      <h1>Dashboard de Gestión de Combustible</h1>
-      <h2>¡Bienvenido!</h2>
+      
+      <h1>Aplicación para Gestión de Combustible</h1>
+      <h2>¡Bienvenido! </h2>
       {/* Mostramos la información del usuario del token */}
       <p>
         <strong>Rol:</strong> {NOMBRES_ROLES[usuario.rol] || 'Desconocido'} | 
         <strong> Sucursal ID:</strong> {usuario.sucursal}
       </p>
 
-      <nav>
+      <nav className="action-menu">
         <h3>Menú de Acciones</h3>
-        <ul>
+        <ul >
           {/* Renderizado Condicional: Mostramos enlaces según el rol */}
 
           {usuario.rol === 1 && (
-            <li><Link to="/admin/usuarios">Administrar Usuarios</Link></li>
+            <li ><Link to="/admin/usuarios">Administrar Usuarios</Link></li>
+          )}
+
+          {usuario.rol === 1 && (
+            <li><Link to="/admin/maquinaria">Administrar Maquinaria</Link></li>
           )}
 
           {/* Todos los roles excepto Gerencia pueden registrar consumos */}
@@ -46,6 +51,10 @@ function DashboardPage() {
             <li><Link to="/consumos">Visualizar Consumos</Link></li>
           )}
 
+          {[3, 4].includes(usuario.rol) && (
+          <li><Link to="/recepciones/registrar">Registrar Recepción de Combustible</Link></li>
+          )}
+
           {/* Roles que pueden gestionar traslados */}
           {[1, 3, 4].includes(usuario.rol) && (
             <li><Link to="/traslados">Gestionar Traslados</Link></li>
@@ -53,12 +62,14 @@ function DashboardPage() {
 
           {/* Roles que pueden ver reportes */}
           {[1, 2, 3].includes(usuario.rol) && (
-            <li><Link to="/reportes">Ver Reportes</Link></li>
+            <li><Link to="/reportes">Ver Lista de consumos</Link></li>
+          )}
+
+          {[1, 3, 4].includes(usuario.rol) && (
+            <li><Link to="/reportes/stock">Ver Stock de Combustible</Link></li>
           )}
         </ul>
       </nav>
-
-      <button onClick={logout}>Cerrar Sesión</button>
     </div>
   );
 }

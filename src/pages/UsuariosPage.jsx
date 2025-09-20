@@ -71,7 +71,6 @@ function UsuariosPage() {
       <h1>Administración de Usuarios</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       
-      {/* Mostramos el formulario o la tabla */}
       {isFormVisible ? (
         <UsuarioForm
           usuarioInicial={usuarioAEditar}
@@ -80,9 +79,11 @@ function UsuariosPage() {
         />
       ) : (
         <>
-          <button onClick={handleCrear}>Crear Nuevo Usuario</button>
+          <button onClick={handleCrear} className="btn btn-primary" style={{marginBottom: '1.5rem'}}>
+            Crear Nuevo Usuario
+          </button>
           {loading ? <p>Cargando...</p> : (
-            <table>
+            <table className="responsive-table">
               <thead>
                 <tr>
                   <th>RUT</th>
@@ -96,14 +97,14 @@ function UsuariosPage() {
               <tbody>
                 {usuarios.map(user => (
                   <tr key={user.id_usuario}>
-                    <td>{user.rut}</td>
-                    <td>{`${user.nombre} ${user.apellido}`}</td>
-                    <td>{user.nombre_rol}</td>
-                    <td>{user.nombre_sucursal}</td>
-                    <td>{user.estado}</td>
-                    <td>
-                      <button onClick={() => handleEditar(user)}>Editar</button>
-                      <button onClick={() => handleCambiarEstado(user.id_usuario, user.estado)}>
+                    <td data-label="RUT">{user.rut}</td>
+                    <td data-label="Nombre">{`${user.nombre} ${user.apellido}`}</td>
+                    <td data-label="Rol">{user.nombre_rol}</td>
+                    <td data-label="Sucursal">{user.nombre_sucursal}</td>
+                    <td data-label="Estado">{user.estado}</td>
+                    <td data-label="Acciones">
+                      <button onClick={() => handleEditar(user)} className="btn btn-secondary">Editar</button>
+                      <button onClick={() => handleCambiarEstado(user.id_usuario, user.estado)} className="btn btn-secondary" style={{marginLeft: '0.5rem'}}>
                         Cambiar Estado
                       </button>
                     </td>

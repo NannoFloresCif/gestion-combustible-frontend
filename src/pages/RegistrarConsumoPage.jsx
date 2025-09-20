@@ -64,10 +64,10 @@ function RegistrarConsumoPage() {
   return (
     <div>
       <h2>Registrar Nuevo Consumo</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Máquina:</label>
-          <select name="id_maquina" value={formData.id_maquina} onChange={handleChange} required>
+      <form onSubmit={handleSubmit} className="form-container">
+        <div className="form-group">
+          <label htmlFor="id_maquina">Máquina:</label>
+          <select id="id_maquina" name="id_maquina" value={formData.id_maquina} onChange={handleChange} required className="form-select">
             <option value="">Seleccione una máquina</option>
             {maquinas.map(m => (
               <option key={m.id_maquina} value={m.id_maquina}>
@@ -76,22 +76,33 @@ function RegistrarConsumoPage() {
             ))}
           </select>
         </div>
-        <div>
-          <label>Surtidor:</label>
-          <select name="id_surtidor" value={formData.id_surtidor} onChange={handleChange} required>
+        <div className="form-group">
+          <label htmlFor="id_surtidor">Surtidor:</label>
+          <select id="id_surtidor" name="id_surtidor" value={formData.id_surtidor} onChange={handleChange} required className="form-select">
             <option value="">Seleccione un surtidor</option>
             {surtidores.map(s => (
               <option key={s.id_surtidor} value={s.id_surtidor}>{s.nombre_surtidor}</option>
             ))}
           </select>
         </div>
-        <div><label>Horómetro:</label><input type="number" name="horometro" value={formData.horometro} onChange={handleChange} required step="0.01" /></div>
-        <div><label>Litros Cargados:</label><input type="number" name="litros_cargados" value={formData.litros_cargados} onChange={handleChange} required step="0.01" /></div>
-        <div><label>Cuentalitros del Surtidor:</label><input type="number" name="cuentalitros_surtidor" value={formData.cuentalitros_surtidor} onChange={handleChange} required step="0.01" /></div>
+        <div className="form-group">
+          <label htmlFor="horometro">Horómetro:</label>
+          <input id="horometro" type="number" name="horometro" value={formData.horometro} onChange={handleChange} required step="0.01" className="form-input" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="litros_cargados">Litros Cargados:</label>
+          <input id="litros_cargados" type="number" name="litros_cargados" value={formData.litros_cargados} onChange={handleChange} required step="0.01" className="form-input" />
+        </div>
+        <div className="form-group">
+          <label htmlFor="cuentalitros_surtidor">Cuentalitros del Surtidor:</label>
+          <input id="cuentalitros_surtidor" type="number" name="cuentalitros_surtidor" value={formData.cuentalitros_surtidor} onChange={handleChange} required step="0.01" className="form-input"/>
+        </div>
 
-        <button type="submit">Registrar Consumo</button>
+        <div className="form-actions">
+        <button type="submit" className="btn btn-primary">Registrar Consumo</button>
+        </div>
       </form>
-      {mensaje.texto && <p style={{ color: mensaje.tipo === 'error' ? 'red' : 'green' }}>{mensaje.texto}</p>}
+      {mensaje.texto && <p style={{ color: mensaje.tipo === 'error' ? 'red' : 'green' , marginTop: '1rem' }}>{mensaje.texto}</p>}
     </div>
   );
 }

@@ -99,10 +99,11 @@ function TrasladosPage() {
     <>
     <div>
       <h2>Solicitar Traslado de Maquinaria</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
+      <form onSubmit={handleSubmit} className="form-container">
+        {/* ... Lógica de mensajes ... */}
+        <div className="form-group">
           <label>Máquina a trasladar:</label>
-          <select name="id_maquina" value={formData.id_maquina} onChange={handleChange} required>
+          <select name="id_maquina" value={formData.id_maquina} onChange={handleChange} required className="form-select">
             <option value="">Seleccione una máquina</option>
             {maquinas.map(m => (
               <option key={m.id_maquina} value={m.id_maquina}>
@@ -111,53 +112,45 @@ function TrasladosPage() {
             ))}
           </select>
         </div>
-        <div>
+        <div className="form-group">
           <label>Horómetro de Salida:</label>
-          <input type="number" name="horometro_salida" value={formData.horometro_salida} onChange={handleChange} required step="0.01" />
+          <input type="number" name="horometro_salida" value={formData.horometro_salida} onChange={handleChange} required step="0.01" className="form-input" />
         </div>
-        <div>
+        <div className="form-group">
           <label>Sucursal de Destino:</label>
-          <select name="id_sucursal_destino" value={formData.id_sucursal_destino} onChange={handleChange} required>
+          <select name="id_sucursal_destino" value={formData.id_sucursal_destino} onChange={handleChange} required className="form-select">
             <option value="">Seleccione una sucursal</option>
             {sucursales.map(s => (
               <option key={s.id_sucursal} value={s.id_sucursal}>{s.nombre_sucursal}</option>
             ))}
           </select>
         </div>
-        <button type="submit">Solicitar Traslado</button>
+        <div className="form-actions">
+          <button type="submit" className="btn btn-primary">Solicitar Traslado</button>
+        </div>
       </form>
       {mensaje.texto && <p style={{ color: mensaje.tipo === 'error' ? 'red' : 'green' }}>{mensaje.texto}</p>}
     </div>
 
-    <hr style={{ margin: '2rem 0' }} />
+    <hr style={{ margin: '2rem 0', border: 'none', borderBottom: '1px solid var(--color-borde)' }} />
 
     <section>
         <h2>Traslados Pendientes de Recepción</h2>
-        {loading && <p>Cargando traslados...</p>}
-        {!loading && trasladosPendientes.length === 0 && <p>No tienes traslados pendientes de recibir.</p>}
+        {/* ... Lógica de carga y mensajes ... */}
         {!loading && trasladosPendientes.length > 0 && (
-          <table>
-            <thead>
-              <tr>
-                <th>Fecha Solicitud</th>
-                <th>Máquina</th>
-                <th>Sucursal Origen</th>
-                <th>Horómetro Salida</th>
-                <th>Solicitante</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
+          <table className="responsive-table">
+            {/* ... Cabecera de la tabla ... */}
             <tbody>
               {trasladosPendientes.map(t => (
                 <tr key={t.id_traslado}>
-                  <td>{new Date(t.fecha_solicitud).toLocaleString('es-CL')}</td>
-                  <td>{t.maquina_codigo} - {t.maquina_modelo}</td>
-                  <td>{t.sucursal_origen}</td>
-                  <td>{t.horometro_salida}</td>
-                  <td>{t.usuario_solicita}</td>
-                  <td>
-                    <button onClick={() => handleResponderTraslado(t.id_traslado, 'Aceptado')}>Aceptar</button>
-                    <button onClick={() => handleResponderTraslado(t.id_traslado, 'Rechazado')} style={{ marginLeft: '0.5rem' }}>Rechazar</button>
+                  <td data-label="Fecha Solicitud">{new Date(t.fecha_solicitud).toLocaleString('es-CL')}</td>
+                  <td data-label="Máquina">{t.maquina_codigo} - {t.maquina_modelo}</td>
+                  <td data-label="Origen">{t.sucursal_origen}</td>
+                  <td data-label="Horómetro">{t.horometro_salida}</td>
+                  <td data-label="Solicitante">{t.usuario_solicita}</td>
+                  <td data-label="Acciones">
+                    <button onClick={() => handleResponderTraslado(t.id_traslado, 'Aceptado')} className="btn btn-primary">Aceptar</button>
+                    <button onClick={() => handleResponderTraslado(t.id_traslado, 'Rechazado')} className="btn btn-secondary" style={{ marginLeft: '0.5rem' }}>Rechazar</button>
                   </td>
                 </tr>
               ))}
@@ -165,8 +158,7 @@ function TrasladosPage() {
           </table>
         )}
       </section>
-
-      </>
+  </>
   );
 }
 

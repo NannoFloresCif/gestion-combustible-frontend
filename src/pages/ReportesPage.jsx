@@ -37,24 +37,29 @@ function ReportesPage() {
     <div>
       <h2>Reporte de Desviaciones de Combustible</h2>
 
-      <form onSubmit={handleGenerarReporte}>
-        <label>Fecha de Inicio: </label>
-        <input 
-          type="date" 
-          value={fechaInicio} 
-          onChange={(e) => setFechaInicio(e.target.value)}
-          required
-        />
+      <form onSubmit={handleGenerarReporte} className="filter-bar">
+        <div className="form-group">
+            <label>Fecha de Inicio:</label>
+            <input 
+              type="date" 
+              value={fechaInicio} 
+              onChange={(e) => setFechaInicio(e.target.value)}
+              required
+              className="form-input"
+            />
+        </div>
+        <div className="form-group">
+            <label>Fecha de Fin:</label>
+            <input 
+              type="date" 
+              value={fechaFin} 
+              onChange={(e) => setFechaFin(e.target.value)}
+              required
+              className="form-input"
+            />
+        </div>
 
-        <label style={{ marginLeft: '1rem' }}>Fecha de Fin: </label>
-        <input 
-          type="date" 
-          value={fechaFin} 
-          onChange={(e) => setFechaFin(e.target.value)}
-          required
-        />
-
-        <button type="submit" style={{ marginLeft: '1rem' }} disabled={loading}>
+        <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? 'Generando...' : 'Generar Reporte'}
         </button>
       </form>
@@ -64,24 +69,24 @@ function ReportesPage() {
       {reporteData.length > 0 && (
         <div style={{ marginTop: '2rem' }}>
           <h3>Resultados del Reporte</h3>
-          <table>
+          <table className="responsive-table">
             <thead>
               <tr>
                 <th>Día</th>
                 <th>Tipo Combustible</th>
-                <th>Total Consumos Ingresados (Lts)</th>
-                <th>Total Consumos Cuentalitros (Lts)</th>
+                <th>Consumos Ingresados (Lts)</th>
+                <th>Consumos Cuentalitros (Lts)</th>
                 <th>Diferencia (Lts)</th>
               </tr>
             </thead>
             <tbody>
               {reporteData.map(row => (
                 <tr key={`${row.dia}-${row.tipo_combustible}`}>
-                  <td>{new Date(row.dia).toLocaleDateString('es-CL', { timeZone: 'UTC' })}</td>
-                  <td>{row.tipo_combustible}</td>
-                  <td>{parseFloat(row.totalConsumosIngresados).toFixed(2)}</td>
-                  <td>{parseFloat(row.totalConsumosCuentalitros).toFixed(2)}</td>
-                  <td style={{ color: parseFloat(row.diferencia) < 0 ? 'red' : 'green' }}>
+                  <td data-label="Día">{new Date(row.dia).toLocaleDateString('es-CL', { timeZone: 'UTC' })}</td>
+                  <td data-label="Combustible">{row.tipo_combustible}</td>
+                  <td data-label="Ingresados">{parseFloat(row.totalConsumosIngresados).toFixed(2)}</td>
+                  <td data-label="Cuentalitros">{parseFloat(row.totalConsumosCuentalitros).toFixed(2)}</td>
+                  <td data-label="Diferencia" style={{ color: parseFloat(row.diferencia) < 0 ? 'red' : 'green', fontWeight: 'bold' }}>
                     {parseFloat(row.diferencia).toFixed(2)}
                   </td>
                 </tr>
