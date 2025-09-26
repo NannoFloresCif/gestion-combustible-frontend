@@ -4,7 +4,7 @@ import api from '../services/api';
 function RecepcionCombustiblePage() {
   const [formData, setFormData] = useState({
     fecha: new Date().toISOString().split('T')[0], // Pone la fecha de hoy por defecto
-    tipo_combustible: 'Petróleo',
+    tipo_combustible: 'Petroleo',
     litros_recepcionados: '',
     valor_factura: ''
   });
@@ -43,7 +43,7 @@ function RecepcionCombustiblePage() {
       <div className="form-group">
         <label>Tipo Combustible:</label>
         <select name="tipo_combustible" value={formData.tipo_combustible} onChange={handleChange} required className="form-select">
-          <option value="Petróleo">Petróleo</option>
+          <option value="Petroleo">Petróleo</option>
           <option value="Gasolina">Gasolina</option>
         </select>
       </div>
